@@ -41,4 +41,18 @@ class Room extends Model {
         $sql = "DELETE FROM rooms WHERE id=?";
         return $this->query($sql, [$id]);
     }
+
+    public function changeStatus($id, $status) {
+        $stmt = $this->db->prepare("UPDATE rooms SET status = ? WHERE id = ?");
+        return $stmt->execute([$status, $id]);
+    }
+
+    public function getAvailable() {
+    return $this->query("SELECT * FROM rooms WHERE status = 'available'")->fetchAll();
+    }
+
+    public function updateStatus($id, $status) {
+        $stmt = $this->db->prepare("UPDATE rooms SET status = ? WHERE id = ?");
+        $stmt->execute([$status, $id]);
+}
 }

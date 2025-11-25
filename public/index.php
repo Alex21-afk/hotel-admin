@@ -1,36 +1,51 @@
 <?php
 session_start();
 
-// Cargar el controlador base
+// Cargar clases base
 require_once "../core/Controller.php";
 require_once "../core/View.php";
 
-// Obtener la URL (ruta)
-$url = isset($_GET['url']) ? $_GET['url'] : 'auth/login';
+// Obtener la URL solicitada
+$url = isset($_GET['url']) ? trim($_GET['url'], '/') : 'auth/login';
 
-// Quitar "/" final si existe
-$url = rtrim($url, '/');
+// Detectar URI completa (útil para API)
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Dividir en partes
+// ------------------------------
+// Rutas API (antes del router MVC)
+// ------------------------------
+if ($uri === '/api/clients/search') {
+    require_once "../app/controllers/ApiClientsController.php";
+    $controller = new ApiClientsController();
+    $controller->search();
+    exit;
+}
+
+// ------------------------------
+// Router MVC tradicional
+// ------------------------------
 $parts = explode("/", $url);
 
 // Controlador y método
 $controllerName = ucfirst($parts[0]) . "Controller";
 $method = $parts[1] ?? "index";
 
-// Cargar controlador
-$file = "../app/controllers/$controllerName.php";
+// Archivo del controlador
+$controllerFile = "../app/controllers/$controllerName.php";
 
-if (file_exists($file)) {
-    require_once $file;
-    $controller = new $controllerName();
-
-    // Verificar si el método existe
-    if (method_exists($controller, $method)) {
-        $controller->$method();
-    } else {
-        echo "Método '$method' no encontrado en $controllerName";
-    }
-} else {
-    echo "Controlador '$controllerName' no encontrado.";
+// Verificar si existe el controlador
+if (!file_exists($controllerFile)) {
+    die("Controlador '$controllerName' no encontrado.");
 }
+
+require_once $controllerFile;
+
+$controller = new $controllerName();
+
+// Verificar si el método existe
+if (!method_exists($controller, $method)) {
+    die("Método '$method' no encontrado en $controllerName.");
+}
+
+// Ejecutar método
+$controller->$method();

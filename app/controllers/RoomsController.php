@@ -41,4 +41,17 @@ class RoomsController extends Controller {
         $this->room->deleteRoom($id);
         header("Location: /hotel-admin/public/rooms");
     }
+
+    public function status($id, $status) {  
+        $valid = ['available', 'occupied', 'maintenance'];
+
+        if (!in_array($status, $valid)) {
+            die("Estado inválido.");
+    }
+
+    $this->room->changeStatus($id, $status);
+    header("Location: /hotel-admin/public/rooms");
+    exit;
+}
+
 }
