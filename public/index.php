@@ -26,8 +26,21 @@ if ($uri === '/api/clients/search') {
 // ------------------------------
 $parts = explode("/", $url);
 
+// Mapear controladores si hay singular/plural o nombres especiales
+$mapControllers = [
+    'stay' => 'StaysController',
+    'stays' => 'StaysController',
+    'client' => 'ClientsController',
+    'clients' => 'ClientsController',
+    'room' => 'RoomsController',
+    'rooms' => 'RoomsController',
+    'auth' => 'AuthController',
+    // agrega más según necesites
+];
+
 // Controlador y método
-$controllerName = ucfirst($parts[0]) . "Controller";
+$controllerKey = $parts[0];
+$controllerName = $mapControllers[$controllerKey] ?? ucfirst($controllerKey) . "Controller";
 $method = $parts[1] ?? "index";
 
 // Archivo del controlador

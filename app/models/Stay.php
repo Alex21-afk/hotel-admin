@@ -40,3 +40,5 @@ class Stay extends Model {
         return $stmt->fetch();
     }
 }
+
+
