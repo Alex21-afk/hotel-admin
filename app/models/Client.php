@@ -1,49 +1,43 @@
 <?php
-require_once __DIR__ . "/Model.php";
 
 class Client extends Model {
 
-    protected $table = "clients";
+    protected $table = 'clients';
 
-    /** Obtener todos los clientes */
     public function getAll() {
-        $sql = "SELECT * FROM clients ORDER BY full_name";
-        return $this->query($sql)->fetchAll();
+        $sql = "SELECT * FROM {$this->table} ORDER BY full_name ASC";
+        return $this->db->query($sql)->fetchAll();
     }
 
-    /** Buscar cliente */
-    public function find($id) {
-        $sql = "SELECT * FROM clients WHERE id = ?";
+    public function getById($id) {
+        $sql = "SELECT * FROM {$this->table} WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 
-    /** Crear cliente */
     public function create($data) {
-        $sql = "INSERT INTO clients (full_name, document, phone) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO {$this->table} (full_name, dni) VALUES (?, ?)";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            $data['full_name'],
-            $data['document'],
-            $data['phone']
-        ]);
+        return $stmt->execute([$data['full_name'], $data['dni']]);
+    }
+
+    public function update($data) {
+        $sql = "UPDATE {$this->table} SET full_name = ?, dni = ? WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$data['full_name'], $data['dni'], $data['id']]);
+    }
+
+    public function delete($id) {
+        $sql = "DELETE FROM {$this->table} WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$id]);
     }
 
     public function search($term) {
-    $sql = "SELECT id, full_name, dni 
-            FROM clients 
-            WHERE full_name LIKE ? OR dni LIKE ?
-            LIMIT 10";
-
-    $stmt = $this->db->prepare($sql);
-
-    $like = '%' . $term . '%';
-
-    $stmt->execute([$like, $like]);
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-
+        $sql = "SELECT id, full_name, dni FROM {$this->table} WHERE full_name LIKE ? OR dni LIKE ? LIMIT 10";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(["%$term%", "%$term%"]);
+        return $stmt->fetchAll();
+    }
 }

@@ -19,5 +19,6 @@
     </div>
 </footer>
 
+    </main>
 </body>
 </html>

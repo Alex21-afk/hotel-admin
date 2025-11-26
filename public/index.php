@@ -1,9 +1,19 @@
 <?php
 session_start();
 
+// Cargar configuración de BD
+require_once "../config/database.php";
+
 // Cargar clases base
 require_once "../core/Controller.php";
 require_once "../core/View.php";
+
+// Cargar modelos
+require_once "../app/models/Model.php";
+require_once "../app/models/User.php";
+require_once "../app/models/Client.php";
+require_once "../app/models/Room.php";
+require_once "../app/models/Stay.php";
 
 // Obtener la URL solicitada
 $url = isset($_GET['url']) ? trim($_GET['url'], '/') : 'auth/login';
@@ -35,6 +45,7 @@ $mapControllers = [
     'room' => 'RoomsController',
     'rooms' => 'RoomsController',
     'auth' => 'AuthController',
+    'dashboard' => 'DashboardController',
     // agrega más según necesites
 ];
 

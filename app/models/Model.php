@@ -8,7 +8,11 @@ class Model {
     protected $table;
 
     public function __construct() {
-        $this->db = Database::connect(); // retorna PDO
+        try {
+            $this->db = Database::connect(); // Esto está correcto, retorna PDO
+        } catch (RuntimeException $e) {
+            die('Error al conectar a la BD: ' . $e->getMessage());
+        }
     }
 
     /** Ejecutar consultas directas */

@@ -2,26 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel Admin</title>
 
     <!-- Bootstrap desde CDN -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="/assets/css/custom.css">
 </head>
-<body>
+<body class="d-flex flex-column">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container-fluid">
             <!-- Logo/Brand -->
-            <a class="navbar-brand fw-bold" href="/">
-                <i class="bi bi-building"></i> Hotel Admin
-            </a>
+<a class="navbar-brand fw-bold" href="/dashboard">
+    <i class="bi bi-building"></i> Hotel Admin
+</a>
             
             <!-- Toggle Button (Mobile) -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,10 +30,8 @@
             <!-- Navbar Items -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <!-- Separador -->
-                    <li class="nav-item">
-                        <hr class="dropdown-divider d-lg-none">
-                    </li>
+                  
+                 
                     
                     <!-- Usuario Dropdown -->
                     <li class="nav-item dropdown">
@@ -60,53 +57,5 @@
         </div>
     </nav>
 
-    <style>
-        .navbar-brand {
-            font-size: 1.3rem;
-            letter-spacing: 0.5px;
-        }
-
-        .navbar-brand i {
-            margin-right: 0.5rem;
-        }
-
-        .nav-link {
-            transition: color 0.3s ease;
-            margin: 0 0.25rem;
-        }
-
-        .nav-link:hover {
-            color: #0d6efd !important;
-        }
-
-        .nav-link i {
-            margin-right: 0.5rem;
-        }
-
-        .dropdown-menu {
-            border: none;
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
-            animation: slideDown 0.2s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-            color: #0d6efd;
-        }
-
-        .dropdown-item.text-danger:hover {
-            background-color: #f8d7da !important;
-            color: #dc3545 !important;
-        }
-    </style>
+    <!-- Main Content -->
+    <main class="flex-grow-1">
