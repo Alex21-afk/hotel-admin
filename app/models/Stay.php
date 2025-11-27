@@ -69,6 +69,56 @@ class Stay extends Model {
             'total' => $blocks * $pricePerBlock
         ];
     }
+
+    /**
+     * Devuelve totales por mes para un año dado basados en la fecha de check_out.
+     * Resultado: [1 => 123.45, 2 => 0, ...]
+     */
+    public function monthlyTotals($year) {
+        $sql = "SELECT MONTH(check_out) as month, SUM(total_amount) as total
+                FROM {$this->table}
+                WHERE check_out IS NOT NULL
+                  AND YEAR(check_out) = ?
+                GROUP BY MONTH(check_out)
+                ORDER BY month";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$year]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $totals = array_fill(1, 12, 0.00);
+        foreach ($rows as $r) {
+            $m = (int)$r['month'];
+            $totals[$m] = (float)$r['total'];
+        }
+
+        return $totals;
+    }
+
+    /**
+     * Devuelve la cantidad de estancias finalizadas por mes para un año dado.
+     * Resultado: [1 => 10, 2 => 0, ...]
+     */
+    public function monthlyCounts($year) {
+        $sql = "SELECT MONTH(check_out) as month, COUNT(*) as cnt
+                FROM {$this->table}
+                WHERE check_out IS NOT NULL
+                  AND YEAR(check_out) = ?
+                GROUP BY MONTH(check_out)
+                ORDER BY month";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$year]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $counts = array_fill(1, 12, 0);
+        foreach ($rows as $r) {
+            $m = (int)$r['month'];
+            $counts[$m] = (int)$r['cnt'];
+        }
+
+        return $counts;
+    }
 }
 
 

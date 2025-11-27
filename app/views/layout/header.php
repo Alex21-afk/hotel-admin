@@ -50,6 +50,11 @@
                             <i class="bi bi-calendar-check"></i> Estancias
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reports/monthly">
+                            <i class="bi bi-file-earmark-text"></i> Reportes
+                        </a>
+                    </li>
                     
                     <!-- Usuario Dropdown -->
                     <li class="nav-item dropdown">
@@ -58,7 +63,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li>
-                                <a class="dropdown-item" href="/profile">
+                                <a class="dropdown-item" href="/auth/profile">
                                     <i class="bi bi-gear"></i> Mi Perfil
                                 </a>
                             </li>
