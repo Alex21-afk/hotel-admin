@@ -72,6 +72,9 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/clients/show/<?= $client['id'] ?>" class="btn btn-outline-primary" title="Ver Detalle">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
                                         <a href="/clients/edit/<?= $client['id'] ?>" class="btn btn-outline-secondary" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
@@ -97,34 +100,5 @@
         </div>
     </div>
 </div>
-
-<script>
-document.getElementById('searchClients').addEventListener('input', function(e) {
-    const term = e.target.value.trim();
-    const resultsDiv = document.getElementById('searchResults');
-
-    if (term.length < 2) {
-        resultsDiv.style.display = 'none';
-        return;
-    }
-
-    fetch(`/clients/search?term=${encodeURIComponent(term)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length > 0) {
-                resultsDiv.innerHTML = data.map(client => `
-                    <a href="/clients/edit/${client.id}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-person"></i> ${client.full_name}
-                        <small class="text-muted ms-2">${client.dni}</small>
-                    </a>
-                `).join('');
-                resultsDiv.style.display = 'block';
-            } else {
-                resultsDiv.innerHTML = '<div class="list-group-item text-muted">No hay resultados</div>';
-                resultsDiv.style.display = 'block';
-            }
-        });
-});
-</script>
 
 <?php require_once __DIR__ . '/../layout/footer.php'; ?>

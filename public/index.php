@@ -18,19 +18,6 @@ require_once "../app/models/Stay.php";
 // Obtener la URL solicitada
 $url = isset($_GET['url']) ? trim($_GET['url'], '/') : 'auth/login';
 
-// Detectar URI completa (útil para API)
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-// ------------------------------
-// Rutas API (antes del router MVC)
-// ------------------------------
-if ($uri === '/api/clients/search') {
-    require_once "../app/controllers/ApiClientsController.php";
-    $controller = new ApiClientsController();
-    $controller->search();
-    exit;
-}
-
 // ------------------------------
 // Router MVC tradicional
 // ------------------------------
@@ -71,5 +58,8 @@ if (!method_exists($controller, $method)) {
     die("Método '$method' no encontrado en $controllerName.");
 }
 
-// Ejecutar método
-$controller->$method();
+// Obtener parámetros adicionales (como el ID)
+$params = array_slice($parts, 2);
+
+// Ejecutar método con parámetros
+call_user_func_array([$controller, $method], $params);

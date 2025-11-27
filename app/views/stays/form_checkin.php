@@ -47,12 +47,4 @@
 
 </div>
 
-<script>
-// Ejemplo de script: alerta al seleccionar un cliente
-document.getElementById("client_id").addEventListener("change", function() {
-    const selectedText = this.options[this.selectedIndex].text;
-    console.log("Cliente seleccionado:", selectedText);
-});
-</script>
-
 <?php require_once __DIR__ . '/../layout/footer.php'; ?>

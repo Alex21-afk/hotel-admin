@@ -1,6 +1,9 @@
 <!-- Bootstrap JS (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- Application JavaScript -->
+<script src="/assets/js/main.js"></script>
+
 <!-- Footer Simple -->
 <footer class="bg-dark text-light mt-5 py-4">
     <div class="container-fluid">

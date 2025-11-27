@@ -40,4 +40,15 @@ class Client extends Model {
         $stmt->execute(["%$term%", "%$term%"]);
         return $stmt->fetchAll();
     }
+
+    public function getStays($clientId) {
+        $sql = "SELECT stays.*, rooms.code as room_code, rooms.floor, rooms.price
+                FROM stays
+                INNER JOIN rooms ON stays.room_id = rooms.id
+                WHERE stays.client_id = ?
+                ORDER BY stays.check_in DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$clientId]);
+        return $stmt->fetchAll();
+    }
 }

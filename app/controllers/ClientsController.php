@@ -110,15 +110,16 @@ class ClientsController extends Controller {
 
 
     public function show($id) {
-    $client = $this->client->getById($id);
-    
-    if (!$client) {
-        $_SESSION['error'] = 'Cliente no encontrado';
-        header('Location: /clients');
-        return;
-    }
+        $client = $this->client->getById($id);
+        
+        if (!$client) {
+            $_SESSION['error'] = 'Cliente no encontrado';
+            header('Location: /clients');
+            return;
+        }
 
-    $this->view('clients/view', ['client' => $client]);
+        $stays = $this->client->getStays($id);
+        $this->view('clients/view', ['client' => $client, 'stays' => $stays]);
     }
 
 }
