@@ -10,48 +10,100 @@ class RoomsController extends Controller {
 
     public function index() {
         $rooms = $this->room->getAll();
-        View::render("rooms/index", ['rooms' => $rooms]);
-    }
-
-    public function view($id) {
-        $room = $this->room->find($id);
-        View::render("rooms/view", ['room' => $room]);
+        $this->view('rooms/index', ['rooms' => $rooms]);
     }
 
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->room->create($_POST);
-            header("Location: /hotel-admin/public/rooms");
-            exit;
+            $data = [
+                'code' => $_POST['code'] ?? '',
+                'floor' => $_POST['floor'] ?? '',
+                'description' => $_POST['description'] ?? '',
+                'price' => $_POST['price'] ?? 0,
+                'status' => $_POST['status'] ?? 'available'
+            ];
+
+            if (empty($data['code']) || empty($data['price'])) {
+                $_SESSION['error'] = 'El código y precio son requeridos';
+                header('Location: /rooms/create');
+                return;
+            }
+
+            if ($this->room->create($data)) {
+                $_SESSION['success'] = 'Habitación creada exitosamente';
+                header('Location: /rooms');
+            } else {
+                $_SESSION['error'] = 'Error al crear la habitación';
+                header('Location: /rooms/create');
+            }
+            return;
         }
-        View::render("rooms/form");
+
+        $this->view('rooms/form', ['title' => 'Nueva Habitación']);
     }
 
     public function edit($id) {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->room->updateRoom($id, $_POST);
-            header("Location: /hotel-admin/public/rooms");
-            exit;
+        $room = $this->room->getById($id);
+        
+        if (!$room) {
+            $_SESSION['error'] = 'Habitación no encontrada';
+            header('Location: /rooms');
+            return;
         }
-        $room = $this->room->find($id);
-        View::render("rooms/form", ['room' => $room]);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'id' => $id,
+                'code' => $_POST['code'] ?? '',
+                'floor' => $_POST['floor'] ?? '',
+                'description' => $_POST['description'] ?? '',
+                'price' => $_POST['price'] ?? 0,
+                'status' => $_POST['status'] ?? 'available'
+            ];
+
+            if (empty($data['code']) || empty($data['price'])) {
+                $_SESSION['error'] = 'El código y precio son requeridos';
+                header("Location: /rooms/edit/$id");
+                return;
+            }
+
+            if ($this->room->update($data)) {
+                $_SESSION['success'] = 'Habitación actualizada exitosamente';
+                header('Location: /rooms');
+            } else {
+                $_SESSION['error'] = 'Error al actualizar la habitación';
+                header("Location: /rooms/edit/$id");
+            }
+            return;
+        }
+
+        $this->view('rooms/form', ['title' => 'Editar Habitación', 'room' => $room]);
     }
 
     public function delete($id) {
-        $this->room->deleteRoom($id);
-        header("Location: /hotel-admin/public/rooms");
+        if ($this->room->delete($id)) {
+            $_SESSION['success'] = 'Habitación eliminada exitosamente';
+        } else {
+            $_SESSION['error'] = 'Error al eliminar la habitación';
+        }
+        header('Location: /rooms');
     }
 
     public function status($id, $status) {  
         $valid = ['available', 'occupied', 'maintenance'];
 
         if (!in_array($status, $valid)) {
-            die("Estado inválido.");
-    }
+            $_SESSION['error'] = 'Estado inválido';
+            header('Location: /rooms');
+            return;
+        }
 
-    $this->room->changeStatus($id, $status);
-    header("Location: /hotel-admin/public/rooms");
-    exit;
-}
+        if ($this->room->changeStatus($id, $status)) {
+            $_SESSION['success'] = 'Estado actualizado exitosamente';
+        } else {
+            $_SESSION['error'] = 'Error al actualizar el estado';
+        }
+        header('Location: /rooms');
+    }
 
 }

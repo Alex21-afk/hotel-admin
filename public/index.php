@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// Configurar zona horaria (Perú)
+date_default_timezone_set('America/Lima');
+
 // Cargar configuración de BD
 require_once "../config/database.php";
 

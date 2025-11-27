@@ -1,11 +1,7 @@
-<!-- Bootstrap JS (CDN) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Application JavaScript -->
-<script src="/assets/js/main.js"></script>
+    </main>
 
 <!-- Footer Simple -->
-<footer class="bg-dark text-light mt-5 py-4">
+<footer class="bg-dark text-light mt-auto py-4">
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-md-6">
@@ -22,6 +18,11 @@
     </div>
 </footer>
 
-    </main>
+<!-- Bootstrap JS (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Application JavaScript -->
+<script src="/assets/js/main.js"></script>
+
 </body>
 </html>

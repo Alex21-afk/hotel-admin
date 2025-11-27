@@ -5,41 +5,46 @@ class Room extends Model {
     protected $table = "rooms";
 
     public function getAll() {
-        $sql = "SELECT * FROM rooms ORDER BY id DESC";
-        return $this->query($sql);
+        $sql = "SELECT * FROM rooms ORDER BY code ASC";
+        return $this->db->query($sql)->fetchAll();
     }
 
-    public function find($id) {
+    public function getById($id) {
         $sql = "SELECT * FROM rooms WHERE id = ?";
-        return $this->query($sql, [$id], true);
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch();
     }
 
     public function create($data) {
         $sql = "INSERT INTO rooms (code, floor, description, price, status) VALUES (?, ?, ?, ?, ?)";
-        return $this->query($sql, [
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
             $data['code'],
             $data['floor'],
-            $data['description'],
+            $data['description'] ?? '',
             $data['price'],
-            $data['status']
+            $data['status'] ?? 'available'
         ]);
     }
 
-    public function updateRoom($id, $data) {
+    public function update($data) {
         $sql = "UPDATE rooms SET code=?, floor=?, description=?, price=?, status=? WHERE id=?";
-        return $this->query($sql, [
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
             $data['code'],
             $data['floor'],
-            $data['description'],
+            $data['description'] ?? '',
             $data['price'],
-            $data['status'],
-            $id
+            $data['status'] ?? 'available',
+            $data['id']
         ]);
     }
 
-    public function deleteRoom($id) {
+    public function delete($id) {
         $sql = "DELETE FROM rooms WHERE id=?";
-        return $this->query($sql, [$id]);
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$id]);
     }
 
     public function changeStatus($id, $status) {

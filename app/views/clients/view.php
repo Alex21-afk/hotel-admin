@@ -79,16 +79,25 @@
                                     $now = new DateTime();
                                     
                                     if ($checkOut) {
-                                        $duration = $checkIn->diff($checkOut)->days;
+                                        $endTime = $checkOut;
                                         $status = 'completado';
                                         $statusBadge = 'success';
                                     } else {
-                                        $duration = $checkIn->diff($now)->days;
+                                        $endTime = $now;
                                         $status = 'activo';
                                         $statusBadge = 'primary';
                                     }
                                     
-                                    $total = $duration * $stay['price'];
+                                    // Calcular horas totales
+                                    $diff = $checkIn->diff($endTime);
+                                    $totalHours = ($diff->days * 24) + $diff->h + ($diff->i / 60);
+                                    
+                                    // Calcular bloques de 4 horas
+                                    $blocks = ceil($totalHours / 4);
+                                    if ($blocks < 1) $blocks = 1;
+                                    
+                                    // Total registrado o calculado
+                                    $total = $stay['total_amount'] > 0 ? $stay['total_amount'] : ($blocks * $stay['price']);
                                 ?>
                                 <tr>
                                     <td>
@@ -108,10 +117,14 @@
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <span class="badge bg-info"><?= $duration ?> día<?= $duration != 1 ? 's' : '' ?></span>
+                                        <span class="badge bg-info"><?= number_format($totalHours, 1) ?>h</span>
+                                        <br>
+                                        <small class="text-muted"><?= $blocks ?> bloque(s)</small>
                                     </td>
                                     <td>
                                         S/ <?= number_format($stay['price'], 2) ?>
+                                        <br>
+                                        <small class="text-muted">x 4h</small>
                                     </td>
                                     <td>
                                         <strong>S/ <?= number_format($total, 2) ?></strong>
@@ -155,10 +168,17 @@
                                 S/ <?php 
                                     $totalSpent = 0;
                                     foreach ($stays as $stay) {
-                                        $checkIn = new DateTime($stay['check_in']);
-                                        $checkOut = $stay['check_out'] ? new DateTime($stay['check_out']) : new DateTime();
-                                        $days = $checkIn->diff($checkOut)->days;
-                                        $totalSpent += $days * $stay['price'];
+                                        if ($stay['total_amount'] > 0) {
+                                            $totalSpent += $stay['total_amount'];
+                                        } else {
+                                            $checkIn = new DateTime($stay['check_in']);
+                                            $endTime = $stay['check_out'] ? new DateTime($stay['check_out']) : new DateTime();
+                                            $diff = $checkIn->diff($endTime);
+                                            $hours = ($diff->days * 24) + $diff->h + ($diff->i / 60);
+                                            $blocks = ceil($hours / 4);
+                                            if ($blocks < 1) $blocks = 1;
+                                            $totalSpent += $blocks * $stay['price'];
+                                        }
                                     }
                                     echo number_format($totalSpent, 2);
                                 ?>

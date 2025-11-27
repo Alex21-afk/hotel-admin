@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" href="/assets/css/custom.css">
 </head>
-<body class="d-flex flex-column">
+<body class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container-fluid">
@@ -30,8 +30,26 @@
             <!-- Navbar Items -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                  
-                 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/clients">
+                            <i class="bi bi-people"></i> Clientes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rooms">
+                            <i class="bi bi-door-closed"></i> Habitaciones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/stays">
+                            <i class="bi bi-calendar-check"></i> Estancias
+                        </a>
+                    </li>
                     
                     <!-- Usuario Dropdown -->
                     <li class="nav-item dropdown">

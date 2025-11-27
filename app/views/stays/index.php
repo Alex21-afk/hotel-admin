@@ -13,6 +13,21 @@
         </a>
     </div>
 
+    <!-- Alerts -->
+    <?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle"></i> <?= $_SESSION['success'] ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php unset($_SESSION['success']); endif; ?>
+
+    <?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-circle"></i> <?= $_SESSION['error'] ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php unset($_SESSION['error']); endif; ?>
+
     <!-- Stats Cards (opcional) -->
     <div class="row mb-4">
         <div class="col-md-3">
@@ -34,12 +49,23 @@
                         <th scope="col">Cliente</th>
                         <th scope="col">Habitación</th>
                         <th scope="col">Check-in</th>
+                        <th scope="col">Tiempo</th>
+                        <th scope="col">Precio Base</th>
                         <th scope="col">Notas</th>
+                        <th scope="col" class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($active)): ?>
                         <?php foreach ($active as $stay): ?>
+                            <?php
+                                $checkIn = new DateTime($stay['check_in']);
+                                $now = new DateTime();
+                                $diff = $checkIn->diff($now);
+                                $totalHours = ($diff->days * 24) + $diff->h + ($diff->i / 60);
+                                $blocks = ceil($totalHours / 4);
+                                if ($blocks < 1) $blocks = 1;
+                            ?>
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -53,10 +79,27 @@
                                     <span class="badge bg-info"><?= htmlspecialchars($stay['code']) ?></span>
                                 </td>
                                 <td>
-                                    <small class="text-muted"><?= htmlspecialchars($stay['check_in']) ?></small>
+                                    <small class="text-muted"><?= date('d/m/Y H:i', strtotime($stay['check_in'])) ?></small>
                                 </td>
                                 <td>
-                                    <small><?= htmlspecialchars(substr($stay['note'], 0, 50)) . (strlen($stay['note']) > 50 ? '...' : '') ?></small>
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-clock"></i> <?= number_format($totalHours, 1) ?>h
+                                    </span>
+                                    <br>
+                                    <small class="text-muted"><?= $blocks ?> bloque(s)</small>
+                                </td>
+                                <td>
+                                    <strong>S/ <?= number_format($stay['price'], 2) ?></strong>
+                                    <br>
+                                    <small class="text-muted">x 4 horas</small>
+                                </td>
+                                <td>
+                                    <small><?= !empty($stay['note']) ? htmlspecialchars(substr($stay['note'], 0, 30)) . (strlen($stay['note']) > 30 ? '...' : '') : '-' ?></small>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/stays/checkout/<?= $stay['id'] ?>" class="btn btn-sm btn-success">
+                                        <i class="bi bi-box-arrow-right"></i> Check-out
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
