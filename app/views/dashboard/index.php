@@ -1,4 +1,3 @@
-
 <?php include "../app/views/layout/header.php"; ?>
 
 <div class="container-fluid mt-5 mb-5 dashboard-bg">
@@ -146,10 +145,10 @@
         <!-- Reservaciones (NUEVO) -->
         <div class="col-md-3">
             <a href="/reservations" class="text-decoration-none">
-                <div class="card h-100 module-card" style="border-left: 4px solid #0dcaf0;">
+                <div class="card h-100 module-card reservations">
                     <div class="card-body text-center py-4">
                         <div class="mb-3">
-                            <i class="bi bi-calendar-event module-icon text-info" aria-hidden="true"></i>
+                            <i class="bi bi-calendar-event module-icon" aria-hidden="true"></i>
                         </div>
                         <h5 class="card-title fw-bold">Reservaciones</h5>
                         <p class="card-text text-muted small">Reservas (12h)</p>
