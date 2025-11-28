@@ -11,8 +11,34 @@ class DashboardController extends Controller {
             exit;
         }
 
+        // Obtener estadísticas
+        $roomModel = $this->model("Room");
+        $stayModel = $this->model("Stay");
+        $reservationModel = $this->model("Reservation");
+        $clientModel = $this->model("Client");
+
+        // Contar recursos
+        $totalRooms = count($roomModel->getAll());
+        $availableRooms = count($roomModel->getAvailable());
+        $activeStays = count($stayModel->getActive());
+        $totalClients = count($clientModel->getAll());
+        
+        // Estadísticas de reservaciones
+        $activeReservations = count($reservationModel->getActive());
+        $upcomingReservations = count($reservationModel->getUpcoming());
+        $pendingReservations = count($reservationModel->getAll('pending'));
+
         View::render("dashboard/index", [
-            "user" => $_SESSION["user"]
+            "user" => $_SESSION["user"],
+            "stats" => [
+                "totalRooms" => $totalRooms,
+                "availableRooms" => $availableRooms,
+                "activeStays" => $activeStays,
+                "totalClients" => $totalClients,
+                "activeReservations" => $activeReservations,
+                "upcomingReservations" => $upcomingReservations,
+                "pendingReservations" => $pendingReservations
+            ]
         ]);
     }
 }

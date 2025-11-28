@@ -33,9 +33,9 @@ class StaysController extends Controller {
             exit;
         }
 
-        // Clientes y habitaciones disponibles
+        // Clientes y habitaciones disponibles (considerando reservaciones)
         $clients = $this->client->getAll();
-        $rooms = $this->room->getAvailable();
+        $rooms = $this->room->getAvailableForCheckIn();
 
         $this->view('stays/form_checkin', [
             'clients' => $clients,

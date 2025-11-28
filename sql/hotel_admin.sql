@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-11-2025 a las 05:58:21
+-- Tiempo de generación: 28-11-2025 a las 02:43:58
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -46,6 +46,36 @@ INSERT INTO `clients` (`id`, `dni`, `full_name`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `reservations`
+--
+
+CREATE TABLE `reservations` (
+  `id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `room_id` int(11) NOT NULL,
+  `reservation_date` datetime NOT NULL COMMENT 'Fecha y hora de inicio de la reservación',
+  `end_date` datetime NOT NULL COMMENT 'Fecha y hora de fin de la reservación',
+  `blocks` int(11) DEFAULT 1 COMMENT 'Número de bloques de 12 horas',
+  `total_amount` decimal(10,2) DEFAULT 0.00,
+  `status` enum('pending','confirmed','cancelled','completed') DEFAULT 'pending',
+  `note` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `reservations`
+--
+
+INSERT INTO `reservations` (`id`, `client_id`, `room_id`, `reservation_date`, `end_date`, `blocks`, `total_amount`, `status`, `note`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2025-12-04 20:36:09', '2025-12-05 08:36:09', 1, 50.00, 'pending', 'Reservación de prueba - cliente confirmará', '2025-11-28 01:36:09', '2025-11-28 01:36:09'),
+(2, 2, 2, '2025-11-29 20:36:09', '2025-11-30 20:36:09', 2, 100.00, 'confirmed', 'Cliente ya confirmó su llegada', '2025-11-28 01:36:09', '2025-11-28 01:36:09'),
+(3, 3, 3, '2025-11-22 20:36:09', '2025-11-23 08:36:09', 1, 50.00, 'completed', 'Cliente usó la habitación exitosamente', '2025-11-22 01:36:09', '2025-11-28 01:36:09'),
+(4, 1, 4, '2025-12-07 20:36:09', '2025-12-09 08:36:09', 3, 150.00, 'cancelled', 'Cliente canceló por cambio de planes', '2025-11-28 01:36:09', '2025-11-28 01:36:09');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `rooms`
 --
 
@@ -63,10 +93,10 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `code`, `floor`, `description`, `price`, `status`) VALUES
-(1, '101', '1', 'Habitación simple con baño privado', 80.00, 'occupied'),
+(1, '101', '1', 'Habitación simple con baño privado', 80.00, 'available'),
 (2, '102', '1', 'Habitación simple ventilada', 75.00, 'available'),
-(3, '201', '2', 'Habitación doble con vista', 120.00, 'occupied'),
-(4, '202', '2', 'Suite matrimonial', 180.00, 'occupied');
+(3, '201', '2', 'Habitación doble con vista', 120.00, 'available'),
+(4, '202', '2', 'Suite matrimonial', 180.00, 'available');
 
 -- --------------------------------------------------------
 
@@ -89,7 +119,7 @@ CREATE TABLE `stays` (
 --
 
 INSERT INTO `stays` (`id`, `client_id`, `room_id`, `check_in`, `check_out`, `total_amount`, `note`) VALUES
-(13, 3, 1, '2025-11-25 23:57:07', NULL, 0.00, 'pruba 1');
+(13, 3, 1, '2025-11-25 23:57:07', '2025-11-27 20:40:47', 960.00, 'pruba 1');
 
 -- --------------------------------------------------------
 
@@ -123,6 +153,16 @@ INSERT INTO `users` (`id`, `username`, `password`, `name`, `role`, `created_at`)
 ALTER TABLE `clients`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `dni` (`dni`);
+
+--
+-- Indices de la tabla `reservations`
+--
+ALTER TABLE `reservations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `client_id` (`client_id`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `idx_dates` (`reservation_date`,`end_date`),
+  ADD KEY `idx_room_date` (`room_id`,`reservation_date`,`end_date`);
 
 --
 -- Indices de la tabla `rooms`
@@ -159,6 +199,12 @@ ALTER TABLE `clients`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de la tabla `reservations`
+--
+ALTER TABLE `reservations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de la tabla `rooms`
 --
 ALTER TABLE `rooms`
@@ -179,6 +225,13 @@ ALTER TABLE `users`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `reservations`
+--
+ALTER TABLE `reservations`
+  ADD CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `stays`

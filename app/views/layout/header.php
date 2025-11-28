@@ -51,6 +51,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/reservations">
+                            <i class="bi bi-calendar-event"></i> Reservaciones
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/reports/monthly">
                             <i class="bi bi-file-earmark-text"></i> Reportes
                         </a>
